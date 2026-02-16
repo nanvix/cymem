@@ -93,3 +93,4 @@ Desktop.ini
 
 # Pycharm project files
 *.idea
+*.o
