@@ -84,4 +84,11 @@ install: $(STATICLIB)
 clean:
 	rm -f *.o $(STATICLIB)
 
-.PHONY: all clean install
+test: $(STATICLIB)
+	@echo "Running cymem tests..."
+	@test -f $(STATICLIB) && echo "  OK: $(STATICLIB) exists" || (echo "  FAIL: $(STATICLIB) not found" && exit 1)
+	@$(NANVIX_TOOLCHAIN)/bin/i686-nanvix-ar -t $(STATICLIB) | grep -q cymem.o && echo "  OK: cymem.o in archive" || (echo "  FAIL: cymem.o not in archive" && exit 1)
+	@$(NANVIX_TOOLCHAIN)/bin/i686-nanvix-nm $(STATICLIB) | grep -q PyInit_cymem && echo "  OK: PyInit_cymem symbol found" || (echo "  FAIL: PyInit_cymem not found" && exit 1)
+	@echo "\t\t*** cymem tests PASSED ***"
+
+.PHONY: all clean install test
